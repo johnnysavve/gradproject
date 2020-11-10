@@ -1,54 +1,57 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <!---- import libraries ---->
-  <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
-  <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
-  <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.2/dist/aframe-extras.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-</head>
+<!---- import libraries ---->
+
+<script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
+<script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.5.0/aframe/build/aframe-ar.js"></script>
+<script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v3.8.4/dist/aframe-extras.min.js"></script>
+<script src="https://rawgit.com/mayognaise/aframe-gif-shader/master/dist/aframe-gif-shader.min.js"></script>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script>
+	AFRAME.registerComponent('vidhandler', {
+	  // ...
+	  init: function () {
+	    // Set up initial state and variables.
+	    this.toggle = false;
+	    this.vid = document.querySelector("#vid")
+	    this.vid.pause();
+	  },
+	  tick:function(){
+	    
+	if(this.el.object3D.visible == true){
+	  if(!this.toggle){
+	     this.toggle = true;
+	     this.vid.play();
+	    }
+	  }else{
+	  this.toggle = false;
+	    this.vid.pause();
+	    }
+	  }
+	});
+
+	var videoElement = document.createElement( 'video' );
+	videoElement.setAttribute('webkit-playsinline', 'webkit-playsinline');
+
+	webview.allowsInlineMediaPlayback = true;
+</script>
 
 <body style='margin : 0px; overflow: hidden;'>
 
-  <!---- initialise scene ---->
-  <a-scene embedded arjs='debugUIEnabled: false; sourceType: webcam;'>
-    <!--- create a shape --->
+    <a-scene embedded artoolkit='sourceType: webcam; detectionMode: mono; maxDetectionRate: 30; canvasWidth: 240; canvasHeight: 180' >
     <a-assets>
-      <video  id="vid" autoplay="true" loop="true" src="./small.mp4"></video>
+      <video id="vid" src="https://cdn.glitch.com/b62367d1-ceab-454b-b664-b032f995ed86%2FBig_Buck_Bunny_Trailer_1080p.ogv.720p.webm?1532370072191" loop="true" crossorigin>
     </a-assets>
-
-    <a-marker preset="hiro" videohandler>
-      <a-entity scale="1 1 1" rotation="-90 0 0">
-        <a-video position='2 0 0' rotation="-90 0 0" scale="3.54 2 3.54" material='transparent:true;src:#vid' play="true" controls></a-video>
-      </a-entity>
+   
+    <a-marker id="memarker" preset="hiro" vidhandler>
+      <a-box position='0 0 0' material='transparent:true;opacity: 0.7;src:#vid'></a-box>
     </a-marker>
-    <a-entity camera>
-      <a-entity 
-          position="0 0 0">
-      </a-entity>
-    </a-entity>
+  <a-camera-static></a-camera-static>
   </a-scene>
-  <script type="text/javascript">
-    AFRAME.registerComponent('videohandler', {
-      init: function () {
-        this.toggle = false;
-        this.vid = document.querySelector('#vid');
-        this.vid.pause();
-      },
-      tick: function () {
-        if (this.el.object3D.visible === true) {
-          if (!this.toggle) {
-            this.toggle = true;
-            this.vid.play();
-          }
-        } else {
-          this.toggle = false;
-          this.vid.pause();
-        }
-      }
-    });
-  </script>
 </body>
 
 </html>
+
+<!---- <a-image id="test" src="howtoo.png" position="0 0 0" rotation="-90 0 0" width="" height="" opacity="1" transparent="true" alpha-test="0.2" shader="standard" scale="1 1 1" visible="" material="" geometry=""></a-image> --->
